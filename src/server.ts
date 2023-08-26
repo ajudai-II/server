@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const PORT = 4000;
 import app from "./index";
 import http from "http";

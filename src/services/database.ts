@@ -1,5 +1,6 @@
+/* eslint-disable node/no-process-env */
+/* eslint-disable no-console */
 import mongoose from "mongoose";
-/* eslint no-console: ["error", { allow: ["warn", "error"] }] */
 
 const connectToMongo = async () => {
   try {
