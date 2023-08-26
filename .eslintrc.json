@@ -13,7 +13,13 @@
     "project": "./tsconfig.json"
   },
   "rules": {
+    "@typescript-eslint/no-explicit-any": ["off"],
     "@typescript-eslint/explicit-member-accessibility": "warn",
+    "@typescript-eslint/no-unsafe-member-access": "off",
+    "@typescript-eslint/no-unsafe-assignment": "off",
+    "@typescript-eslint/no-unsafe-call": "off",
+    "@typescript-eslint/no-redundant-type-constituents": "off",
+    "@typescript-eslint/no-process-env  ": "off",
     "@typescript-eslint/no-misused-promises": 0,
     "@typescript-eslint/no-floating-promises": 0,
     "max-len": [
@@ -27,7 +33,7 @@
     "no-extra-boolean-cast": 0,
     "semi": 1,
     "indent": ["warn", 2],
-    "quotes": ["warn", "single"],
+    "quotes": ["warn", "double"],
     "node/no-process-env": 1,
     "node/no-unsupported-features/es-syntax": [
       "error",
