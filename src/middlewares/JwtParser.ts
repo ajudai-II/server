@@ -1,3 +1,4 @@
+/* eslint-disable comma-dangle */
 /* eslint-disable node/no-process-env */
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
