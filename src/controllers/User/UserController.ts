@@ -3,10 +3,11 @@ import User from "../../models/User";
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import dotenv from "dotenv";
+import { IUser } from "@src/@types/user";
 dotenv.config({ path: "/server" });
 
 class UserController {
-  public register(req: Request, res: Response) {
+  private register(req: Request, res: Response) {
     const { name, email, cpf, password } = req.body;
 
     const saveUser = new User({
@@ -20,7 +21,7 @@ class UserController {
     return res.status(200).send({ message: "Usuário criado com sucesso!" });
   }
 
-  public async login(req: Request, res: Response) {
+  private async login(req: Request, res: Response) {
     try {
       const { email, password } = req.body;
 
@@ -28,19 +29,27 @@ class UserController {
         return res.status(400).json({ message: "Preencha os campos corretamente" });
       }
 
+      const userVerify = await User.findOne<Promise<IUser>>({ email: email });
+      if (!userVerify) {
+        return res.status(404).json({ message: "Usuário não encontrado" });
+      }
+
+
       const hashedPassword = await bcrypt.hash(password, 10);
       const user = {
-        id: 1,
-        email: "exemplo@email.com",
+        _id: userVerify._id,
+        email: email,
         password: hashedPassword,
       };
 
-      if (email === user.email && (await bcrypt.compare(password, user.password))) {
-        const token = jwt.sign({ userId: user.id, userEmail: user.email }, process.env.JWT_SECRET!, {
+      const validyPassword = await bcrypt.compare(password, user.password);
+
+      if (email === user.email && validyPassword) {
+        const token = jwt.sign({ userId: user._id, userEmail: user.email }, process.env.JWT_SECRET!, {
           expiresIn: "1h",
         });
 
-        return res.status(200).json({ token });
+        return res.status(200).json({ token, email: userVerify.email, _id: userVerify._id });
       } else {
         return res.status(401).json({ message: "Credenciais inválidas" });
       }
