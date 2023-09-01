@@ -11,7 +11,6 @@ class UserController {
   public async register(req: Request, res: Response) {
     try {
       const { name, email, phone, cpf, password } = req.body;
-      console.log({ name, email, phone, cpf, password });
       const searchEmail = await User.findOne({ email });
 
       if (searchEmail) {
@@ -78,7 +77,7 @@ class UserController {
       }
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: "Erro interno do servidor" });
+      return res.status(500).json({ message: "Internal server error" });
     }
   }
 }
