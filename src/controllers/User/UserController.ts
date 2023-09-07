@@ -47,22 +47,16 @@ class UserController {
       }
 
       const userVerify = await User.findOne<Promise<IUser>>({ email: email });
+
       if (!userVerify) {
         return res.status(404).json({ message: "Usuário não encontrado" });
       }
 
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const user = {
-        _id: userVerify._id,
-        email: email,
-        password: hashedPassword,
-      };
+      const validyPassword = await bcrypt.compare(password, userVerify.password);
 
-      const validyPassword = await bcrypt.compare(password, user.password);
-
-      if (email === user.email && validyPassword) {
+      if (userVerify && validyPassword) {
         const token = jwt.sign(
-          { userId: user._id, userEmail: user.email },
+          { userId: userVerify._id, userEmail: userVerify.email },
           process.env.JWT_SECRET!,
           {
             expiresIn: "1h",
