@@ -3,17 +3,17 @@
 import { Request, Response, NextFunction } from "express";
 
 interface IValidateCPF extends Request {
-  USER_CPF: string;
+  cpf: string;
 }
 
 function isCPFValid(req: Request, res: Response, next: NextFunction) {
-  const { USER_CPF }: IValidateCPF = req.body;
+  const { cpf }: IValidateCPF = req.body;
 
-  if (!USER_CPF) {
+  if (!cpf) {
     return res.status(400).send({ message: "Insira o CPF!" });
   }
 
-  const cleanedCPF = USER_CPF.replace(/\D/g, "");
+  const cleanedCPF = cpf.replace(/\D/g, "");
 
   if (cleanedCPF.length !== 11) {
     return res.status(403).send({ message: "CPF menor que 11 caracteres" });
@@ -47,7 +47,7 @@ function isCPFValid(req: Request, res: Response, next: NextFunction) {
     return res.status(403).send({ message: "CPF inválido" });
   }
 
-  req.body.USER_CPF = cleanedCPF;
+  req.body.cpf = cleanedCPF;
 
   next();
 }
