@@ -2,11 +2,12 @@ import mongoose, { Schema } from "mongoose";
 import { IDonation } from "@src/@types/donation";
 
 const DonationSchema: Schema = new mongoose.Schema({
-  title: { type: String, required: true, unique: true },
+  title: { type: String, required: true },
   description: { type: String, required: true },
   amount: { type: Number, required: true },
   isValidated: { type: Boolean, required: true },
   donator: {
+    _id: { type: String, required: true },
     name: { type: String, required: true },
     email: { type: String, required: true },
     phone: { type: String, required: true },
