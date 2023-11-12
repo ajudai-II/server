@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Donation from "../../models/Donation";
-import { IDonation, IDonator } from "@src/@types/donation";
+import { IDonation } from "@src/@types/donation";
+const PAGE_SIZE = 10;
 
 class DonationController {
   public async createDonation(req: Request, res: Response) {
@@ -100,9 +101,13 @@ class DonationController {
 
   public async getAllDonationsByDonator(req: Request, res: Response) {
     try {
-      const { _id }: IDonator = req.body;
+      const { id } = req.params;
+      const { page = 1 } = req.query;
+      const skip = (Number(page) - 1) * PAGE_SIZE;
 
-      const find = await Donation.find({ "donator._id": _id });
+      const find = await Donation.find({ "donator._id": id })
+        .skip(skip)
+        .limit(PAGE_SIZE);
 
       if (!find) {
         return res.status(400).send({ message: "Doação não encontrada" });
