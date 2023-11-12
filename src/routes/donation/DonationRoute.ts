@@ -5,6 +5,7 @@ const donationRoutes = Router();
 
 donationRoutes.get("/donation/:id", DonationController.getDonation).bind(DonationController);
 donationRoutes.get("/donations", DonationController.getAllDonations).bind(DonationController);
+donationRoutes.get("/user-donations", DonationController.getAllDonationsByDonator).bind(DonationController);
 donationRoutes
   .post("/create-donation", DonationController.createDonation)
   .bind(DonationController);

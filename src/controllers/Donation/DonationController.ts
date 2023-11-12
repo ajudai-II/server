@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Donation from "../../models/Donation";
-import { IDonation } from "@src/@types/donation";
+import { IDonation, IDonator } from "@src/@types/donation";
 
 class DonationController {
   public async createDonation(req: Request, res: Response) {
@@ -92,6 +92,23 @@ class DonationController {
       }
 
       return res.status(200).send({ message: "Doação deletada" });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ message: "Internal server error", error });
+    }
+  }
+
+  public async getAllDonationsByDonator(req: Request, res: Response) {
+    try {
+      const { _id }: IDonator = req.body;
+
+      const find = await Donation.find({ "donator._id": _id });
+
+      if (!find) {
+        return res.status(400).send({ message: "Doação não encontrada" });
+      }
+
+      return res.status(200).send({ data: find });
     } catch (error) {
       console.error(error);
       return res.status(500).send({ message: "Internal server error", error });

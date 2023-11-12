@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 import { IDonation } from "@src/@types/donation";
 
 const DonationSchema: Schema = new mongoose.Schema({
-  title: { type: String, required: true },
+  title: { type: String, required: true, unique: false },
   description: { type: String, required: true },
   amount: { type: Number, required: true },
   isValidated: { type: Boolean, required: true },
