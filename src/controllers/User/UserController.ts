@@ -78,7 +78,8 @@ class UserController {
     try {
       const {name, email, phone, cpf, password} = req.body;
       const {id} = req.params;
-      const searchUser = await User.findByIdAndUpdate(id, {name, email, phone, cpf, password}); 
+      const { imageUrl }: any = req.file ? req.file : "";
+      const searchUser = await User.findByIdAndUpdate(id, {name, email, phone, cpf, password, imageUrl}); 
       if (!searchUser) {
         return res.status(404).json({message: "Usuário não encontrado"});
       }
