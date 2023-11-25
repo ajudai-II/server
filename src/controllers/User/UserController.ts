@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Request, Response } from "express";
 import User from "../../models/User";
-import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { IUser } from "@src/@types/user";
+import { generateAccessToken, generateRefreshToken } from "../../jwt/jwt";
 dotenv.config({ path: "/server" });
 
 class UserController {
@@ -55,17 +55,12 @@ class UserController {
       const validyPassword = await bcrypt.compare(password, userVerify.password);
 
       if (userVerify && validyPassword) {
-        const token = jwt.sign(
-          { userId: userVerify._id, userEmail: userVerify.email },
-          process.env.JWT_SECRET!,
-          {
-            expiresIn: "1h",
-          }
-        );
+        const token = generateAccessToken(userVerify?.name)
+        const refresh_token = generateRefreshToken(userVerify?.name)
 
         return res
           .status(200)
-          .json({ token, email: userVerify.email, _id: userVerify._id });
+          .json({ token, refresh_token, email: userVerify.email, _id: userVerify._id });
       } else {
         return res.status(401).json({ message: "Credenciais inválidas" });
       }
@@ -76,18 +71,18 @@ class UserController {
   }
   public async editUser(req: Request, res: Response) {
     try {
-      const {name, email, phone, cpf, password} = req.body;
-      const {id} = req.params;
-      const searchUser = await User.findByIdAndUpdate(id, {name, email, phone, cpf, password}); 
+      const { name, email, phone, cpf, password } = req.body;
+      const { id } = req.params;
+      const searchUser = await User.findByIdAndUpdate(id, { name, email, phone, cpf, password });
       if (!searchUser) {
-        return res.status(404).json({message: "Usuário não encontrado"});
+        return res.status(404).json({ message: "Usuário não encontrado" });
       }
-      return res.status(200).json({message: "Usuário atualizado com sucesso"});
+      return res.status(200).json({ message: "Usuário atualizado com sucesso" });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: "Internal server error" });
     }
-  } 
+  }
 }
 
 export default new UserController();
