@@ -7,13 +7,14 @@ class DonationController {
   public async createDonation(req: Request, res: Response) {
     try {
       const { title, description, amount, isValidated, donator }: IDonation = req.body;
-
+      const { imageUrl }: any = req.file ? req.file : "";
       const saveDonation = new Donation({
         title,
         description,
         amount,
         isValidated,
         donator,
+        imageUrl
       });
 
       await saveDonation.save();
