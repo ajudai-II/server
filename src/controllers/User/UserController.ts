@@ -74,6 +74,21 @@ class UserController {
       return res.status(500).json({ message: "Internal server error" });
     }
   }
+
+  public async getUser(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const searchUser = await User.findById(id);
+      if (!searchUser) {
+        return res.status(404).json({ message: "Usuário não encontrado" });
+      }
+      return res.status(200).json(searchUser);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
   public async editUser(req: Request, res: Response) {
     try {
       const {name, email, phone, cpf, password} = req.body;
@@ -88,6 +103,20 @@ class UserController {
       return res.status(500).json({ message: "Internal server error" });
     }
   } 
+
+  public async deleteUser(req: Request, res: Response) {
+    try {
+      const {id} = req.params;
+      const searchUser = await User.findByIdAndDelete(id);
+      if (!searchUser) {
+        return res.status(404).json({message: "Usuário não encontrado"});
+      }
+      return res.status(200).json({message: "Usuário deletado com sucesso"});
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
 }
 
 export default new UserController();
