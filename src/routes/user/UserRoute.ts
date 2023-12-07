@@ -12,5 +12,5 @@ userRoutes.post("/register", registerValidation, UserController.register).bind(U
 userRoutes.put("/edit/:id", isCPFValid, editValidation, UserController.editUser).bind(UserController);
 userRoutes.get("/get/:id", UserController.getUser).bind(UserController);
 userRoutes.delete("/delete/:id", UserController.deleteUser).bind(UserController);
-
+userRoutes.post("/address/:id", UserController.addAddress).bind(UserController);
 export default userRoutes;
