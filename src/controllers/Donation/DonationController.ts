@@ -6,14 +6,12 @@ const PAGE_SIZE = 10;
 class DonationController {
   public async createDonation(req: Request, res: Response) {
     try {
-      const { title, description, amount, isValidated, donator }: IDonation = req.body;
-
+      const { title, description, amount, isValidated}: IDonation = req.body;
       const saveDonation = new Donation({
         title,
         description,
         amount,
         isValidated,
-        donator,
       });
 
       await saveDonation.save();
@@ -111,6 +109,27 @@ class DonationController {
 
       if (!find) {
         return res.status(400).send({ message: "Doação não encontrada" });
+      }
+
+      return res.status(200).send({ data: find });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ message: "Internal server error", error });
+    }
+  }
+
+  public async getDonationsByCategory(req: Request, res: Response) {
+    try {
+      const { categoryName } = req.params;
+      const { page = 1 } = req.query;
+      const skip = (Number(page) - 1) * PAGE_SIZE;
+
+      const find = await Donation.find({ "category": categoryName })
+        .skip(skip)
+        .limit(PAGE_SIZE);
+
+      if (!find) {
+        return res.status(400).send({ message: "Doações não encontradas para esta categoria" });
       }
 
       return res.status(200).send({ data: find });

@@ -7,5 +7,16 @@ export interface IUser extends Document {
   phone: string;
   cpf: string;
   password: string;
+  addresses: IAddress[];
   createdAt: Date;
+}
+
+export interface IAddress {
+  cep: string;
+  uf: string;
+  city: string;
+  neighborhood: string;
+  street: string;
+  number: string;
+  complement: string;
 }

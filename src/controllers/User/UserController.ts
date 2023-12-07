@@ -4,8 +4,7 @@ import User from "../../models/User";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
-import { IUser } from "@src/@types/user";
-dotenv.config({ path: "/server" });
+import { IAddress, IUser } from "@src/@types/user";
 
 class UserController {
   public async register(req: Request, res: Response) {
@@ -117,6 +116,42 @@ class UserController {
       return res.status(500).json({ message: "Internal server error" });
     }
   }
+
+  public async addAddress(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const { cep, uf, city, neighborhood, street, number, complement } = req.body;
+  
+      const user = await User.findById(id);
+      if (!user) {
+        return res.status(404).json({ message: "Usuário não encontrado" });
+      }
+  
+      if (!user.addresses) {
+        user.addresses = [];
+      }
+  
+      const newAddress: IAddress = {
+        cep,
+        uf,
+        city,
+        neighborhood,
+        street,
+        number,
+        complement,
+      };
+  
+      user.addresses.push(newAddress);
+  
+      await user.save();
+  
+      return res.status(201).json({ message: "Endereço adicionado com sucesso" });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+  
 }
 
 export default new UserController();
