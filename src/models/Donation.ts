@@ -13,6 +13,7 @@ const DonationSchema: Schema = new mongoose.Schema({
     phone: { type: String, required: true },
     address: { type: String, required: true },
   },
+  imageUrl: { type: String, required: true },
   createdAt: {
     type: Date,
     default: Date.now,

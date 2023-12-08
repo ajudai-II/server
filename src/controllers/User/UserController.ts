@@ -90,21 +90,14 @@ class UserController {
 
   public async editUser(req: Request, res: Response) {
     try {
-      const { name, email, phone, cpf, password } = req.body;
-      const { id } = req.params;
-      const hashedPassword = password ? await bcrypt.hash(password, 10) : undefined;
-  
-      const updatedUser = await User.findByIdAndUpdate(
-        id,
-        { name, email, phone, cpf, password: hashedPassword },
-        { new: true, runValidators: true }
-      );
-  
-      if (!updatedUser) {
-        return res.status(404).json({ message: 'Usuário não encontrado' });
+      const {name, email, phone, cpf, password} = req.body;
+      const {id} = req.params;
+      const { imageUrl }: any = req.file ? req.file : "";
+      const searchUser = await User.findByIdAndUpdate(id, {name, email, phone, cpf, password, imageUrl}); 
+      if (!searchUser) {
+        return res.status(404).json({message: "Usuário não encontrado"});
       }
-  
-      return res.status(200).json({ message: 'Usuário atualizado com sucesso', user: updatedUser });
+      return res.status(200).json({message: "Usuário atualizado com sucesso"});
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: 'Internal server error' });

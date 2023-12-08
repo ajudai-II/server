@@ -18,6 +18,7 @@ const UserSchema: Schema<IUser> = new Schema({
   cpf: { type: String, required: true },
   password: { type: String, required: true },
   addresses: [AddressSchema],
+  imageUrl: { type: String},
   createdAt: {
     type: Date,
     default: Date.now,

@@ -7,6 +7,7 @@ export interface IUser extends Document {
   phone: string;
   cpf: string;
   password: string;
+  imageUrl: string;
   addresses: IAddress[];
   createdAt: Date;
 }
