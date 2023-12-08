@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import User from "../../models/User";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import dotenv from "dotenv";
 import { IAddress, IUser } from "@src/@types/user";
 
 class UserController {
@@ -138,6 +137,19 @@ class UserController {
 
       if (!user.addresses) {
         user.addresses = [];
+      }
+
+      if (user.addresses.length >= 3) {
+        return res.status(400).json({ message: "Limite de endereços atingido" });
+      }
+
+      if (user.addresses.length > 0) {
+        const addressExists = user.addresses.find(
+          (address) => address.cep === cep
+        );
+        if (addressExists) {
+          return res.status(400).json({ message: "Endereço já cadastrado" });
+        }
       }
 
       const newAddress: IAddress = {
