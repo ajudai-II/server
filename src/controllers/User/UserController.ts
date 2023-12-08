@@ -133,6 +133,19 @@ class UserController {
         user.addresses = [];
       }
 
+      if (user.addresses.length >= 3) {
+        return res.status(400).json({ message: "Limite de endereços atingido" });
+      }
+
+      if (user.addresses.length > 0) {
+        const addressExists = user.addresses.find(
+          (address) => address.cep === cep
+        );
+        if (addressExists) {
+          return res.status(400).json({ message: "Endereço já cadastrado" });
+        }
+      }
+
       const newAddress: IAddress = {
         cep,
         uf,
