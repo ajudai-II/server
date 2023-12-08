@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Request, Response } from "express";
 import User from "../../models/User";
 import jwt from "jsonwebtoken";
