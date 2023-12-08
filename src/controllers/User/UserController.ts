@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Request, Response } from "express";
 import User from "../../models/User";
 import jwt from "jsonwebtoken";
@@ -94,14 +93,22 @@ class UserController {
     try {
       const { name, email, phone, cpf, password } = req.body;
       const { id } = req.params;
-      const searchUser = await User.findByIdAndUpdate(id, { name, email, phone, cpf, password });
-      if (!searchUser) {
-        return res.status(404).json({ message: "Usuário não encontrado" });
+      const hashedPassword = password ? await bcrypt.hash(password, 10) : undefined;
+  
+      const updatedUser = await User.findByIdAndUpdate(
+        id,
+        { name, email, phone, cpf, password: hashedPassword },
+        { new: true, runValidators: true }
+      );
+  
+      if (!updatedUser) {
+        return res.status(404).json({ message: 'Usuário não encontrado' });
       }
-      return res.status(200).json({ message: "Usuário atualizado com sucesso" });
+  
+      return res.status(200).json({ message: 'Usuário atualizado com sucesso', user: updatedUser });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: "Internal server error" });
+      return res.status(500).json({ message: 'Internal server error' });
     }
   }
 
