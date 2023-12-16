@@ -49,7 +49,10 @@ class UserController {
         return res.status(404).json({ message: "Usuário não encontrado" });
       }
 
-      const validyPassword = await bcrypt.compare(password, userVerify.password);
+      const validyPassword = await bcrypt.compare(
+        password,
+        userVerify.password
+      );
 
       if (userVerify && validyPassword) {
         const token = jwt.sign(
@@ -80,7 +83,6 @@ class UserController {
         return res.status(404).json({ message: "Usuário não encontrado" });
       }
 
-
       return res.status(200).json(searchUser);
     } catch (error) {
       console.error(error);
@@ -90,38 +92,59 @@ class UserController {
 
   public async editUser(req: Request, res: Response) {
     try {
-      const {name, email, phone, cpf, password} = req.body;
-      const {id} = req.params;
-      const { imageUrl }: any = req.file ? req.file : "";
-      const searchUser = await User.findByIdAndUpdate(id, {name, email, phone, cpf, password, imageUrl}); 
-      if (!searchUser) {
-        return res.status(404).json({message: "Usuário não encontrado"});
-      }
-      return res.status(200).json({message: "Usuário atualizado com sucesso"});
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Internal server error' });
-    }
-  }
-
-  public async deleteUser(req: Request, res: Response) {
-    try {
+      const { name, email, phone, cpf, password } = req.body;
       const { id } = req.params;
-      const searchUser = await User.findByIdAndDelete(id);
+      const { imageUrl }: any = req.file ? req.file : "";
+      const searchUser = await User.findByIdAndUpdate(id, {
+        name,
+        email,
+        phone,
+        cpf,
+        password,
+        imageUrl,
+      });
       if (!searchUser) {
         return res.status(404).json({ message: "Usuário não encontrado" });
       }
-      return res.status(200).json({ message: "Usuário deletado com sucesso" });
+      return res
+        .status(200)
+        .json({ message: "Usuário atualizado com sucesso" });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: "Internal server error" });
     }
   }
 
+  public async deleteUser(req: Request, res: Response): Promise<Response> {
+    try {
+      const { id } = req.params;
+      const { password } = req.body;
+
+      const searchUser = await User.findById(id);
+      if (!searchUser) {
+        return res.status(404).json({ message: 'Usuário não encontrado' });
+      }
+
+      const isPasswordValid = await bcrypt.compare(password, searchUser.password);
+
+      if (!isPasswordValid) {
+        return res.status(400).json({ message: 'Senha inválida' });
+      }
+
+      await User.findByIdAndDelete(id);
+      return res.status(200).json({ message: 'Usuário deletado com sucesso' });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  }
+  
+
   public async addAddress(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { cep, uf, city, neighborhood, street, number, complement } = req.body;
+      const { cep, uf, city, neighborhood, street, number, complement } =
+        req.body;
 
       const user = await User.findById(id);
       if (!user) {
@@ -133,7 +156,9 @@ class UserController {
       }
 
       if (user.addresses.length >= 3) {
-        return res.status(400).json({ message: "Limite de endereços atingido" });
+        return res
+          .status(400)
+          .json({ message: "Limite de endereços atingido" });
       }
 
       if (user.addresses.length > 0) {
@@ -159,13 +184,14 @@ class UserController {
 
       await user.save();
 
-      return res.status(201).json({ message: "Endereço adicionado com sucesso" });
+      return res
+        .status(201)
+        .json({ message: "Endereço adicionado com sucesso" });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: "Internal server error" });
     }
   }
-
 }
 
 export default new UserController();

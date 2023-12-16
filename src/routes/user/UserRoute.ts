@@ -19,6 +19,6 @@ userRoutes.post("/login", UserController.login).bind(UserController);
 userRoutes.post("/register", registerValidation, UserController.register).bind(UserController);
 userRoutes.put("/my-account/:id", isCPFValid, editValidation, UserController.editUser).bind(UserController);
 userRoutes.get("/get/:id", UserController.getUser).bind(UserController);
-userRoutes.delete("/delete/:id", UserController.deleteUser).bind(UserController);
 userRoutes.post("/my-address/:id", UserController.addAddress).bind(UserController);
 export default userRoutes;
+userRoutes.post("/settings/:id", UserController.deleteUser).bind(UserController);
