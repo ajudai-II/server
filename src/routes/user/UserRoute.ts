@@ -39,6 +39,3 @@ userRoutes
 userRoutes.post("/address/:id", UserController.addAddress).bind(UserController);
 
 export default userRoutes;
-userRoutes
-  .post("/settings/:id", UserController.deleteUser)
-  .bind(UserController);
