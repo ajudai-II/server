@@ -12,6 +12,7 @@ interface IDonation extends Document {
   title: string;
   description: string;
   amount: number;
+  category: string;
   isValidated: boolean;
   donator: IDonator;
   category: string;

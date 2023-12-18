@@ -6,15 +6,15 @@ const PAGE_SIZE = 10;
 class DonationController {
     public async createDonation(req: Request, res: Response) {
     try {
-      const { title, description, amount, isValidated, donator, category }: IDonation = req.body;
+      const { title, description, amount, category, isValidated, donator }: IDonation = req.body;
       const { imageUrl }: any = req.file ? req.file : "";
       const saveDonation = new Donation({
         title,
         description,
         amount,
+        category,
         isValidated,
         donator,
-        category,
         imageUrl
       });
 

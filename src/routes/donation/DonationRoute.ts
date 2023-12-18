@@ -28,7 +28,7 @@ donationRoutes
   .delete("/delete-donation/:id", DonationController.deleteDonation)
   .bind(DonationController);
 donationRoutes.get(
-  "/category/:categoryName",
+  "/categories/:categoryName",
   DonationController.getDonationsByCategory
 );
 

@@ -118,13 +118,26 @@ class UserController {
     }
   }
 
-  public async deleteUser(req: Request, res: Response) {
+  public async deleteUser(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
-      const searchUser = await User.findByIdAndDelete(id);
+      const { password } = req.body;
+
+      const searchUser = await User.findById(id);
       if (!searchUser) {
         return res.status(404).json({ message: "Usuário não encontrado" });
       }
+
+      const isPasswordValid = await bcrypt.compare(
+        password,
+        searchUser.password
+      );
+
+      if (!isPasswordValid) {
+        return res.status(400).json({ message: "Senha inválida" });
+      }
+
+      await User.findByIdAndDelete(id);
       return res.status(200).json({ message: "Usuário deletado com sucesso" });
     } catch (error) {
       console.error(error);
