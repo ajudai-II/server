@@ -125,23 +125,20 @@ class UserController {
 
       const searchUser = await User.findById(id);
       if (!searchUser) {
-        return res.status(404).json({ message: "Usuário não encontrado" });
+        return res.status(404).json({ message: 'Usuário não encontrado' });
       }
 
-      const isPasswordValid = await bcrypt.compare(
-        password,
-        searchUser.password
-      );
+      const isPasswordValid = await bcrypt.compare(password, searchUser.password);
 
       if (!isPasswordValid) {
-        return res.status(400).json({ message: "Senha inválida" });
+        return res.status(400).json({ message: 'Senha inválida' });
       }
 
       await User.findByIdAndDelete(id);
-      return res.status(200).json({ message: "Usuário deletado com sucesso" });
+      return res.status(200).json({ message: 'Usuário deletado com sucesso' });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: "Internal server error" });
+      return res.status(500).json({ message: 'Internal server error' });
     }
   }
 
