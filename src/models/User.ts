@@ -7,7 +7,7 @@ const UserSchema: Schema = new mongoose.Schema({
   phone: { type: String, required: true },
   cpf: { type: String, required: true },
   password: { type: String, required: true },
-  imageUrl: { type: String},
+  picture: { type: String },
   createdAt: {
     type: Date,
     default: Date.now,
