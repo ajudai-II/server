@@ -17,8 +17,7 @@ const UserSchema: Schema<IUser> = new Schema({
   phone: { type: String, required: true },
   cpf: { type: String, required: true },
   password: { type: String, required: true },
-  addresses: [AddressSchema],
-  imageUrl: { type: String},
+  picture: { type: String },
   createdAt: {
     type: Date,
     default: Date.now,
@@ -26,4 +25,3 @@ const UserSchema: Schema<IUser> = new Schema({
 });
 
 export default mongoose.model<IUser>("User", UserSchema);
-
