@@ -22,6 +22,7 @@ const UserSchema: Schema<IUser> = new Schema({
     type: Date,
     default: Date.now,
   },
+  recoveryCode: { type: String, createdAt: Date.now},
 });
 
 export default mongoose.model<IUser>("User", UserSchema);

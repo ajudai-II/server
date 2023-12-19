@@ -5,6 +5,7 @@ import isCPFValid from "../../middlewares/CpfValidator";
 import editValidation from "../../middlewares/EditValidation";
 import { uploadImage } from "../../middlewares/UploadImage";
 import multer, { memoryStorage } from "multer";
+import changePasswordValidation from "../../middlewares/ChangePasswordValidation";
 
 const userRoutes = Router();
 
@@ -37,5 +38,8 @@ userRoutes
   .post("/delete-account/:id", UserController.deleteUser)
   .bind(UserController);
 userRoutes.post("/address/:id", UserController.addAddress).bind(UserController);
+userRoutes.post("/recovery-password", UserController.recoveryCode).bind(UserController);
+userRoutes.post("/verify-code", UserController.verifyRecoveryCode).bind(UserController);
+userRoutes.put("/change-password", UserController.changePassword).bind(UserController);
 
 export default userRoutes;

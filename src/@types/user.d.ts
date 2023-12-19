@@ -10,6 +10,7 @@ export interface IUser extends Document {
   picture: string;
   addresses: IAddress[];
   createdAt: Date;
+  recoveryCode?: string;
 }
 
 export interface IAddress {
