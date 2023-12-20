@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
 import User from "../../models/User";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { IAddress, IUser } from "@src/@types/user";
 import { sendRecoveryCode } from "../../services/mail";
+import { generateAccessToken, generateRefreshToken } from "../../jwt/jwt";
 
 class UserController {
   public async register(req: Request, res: Response) {
@@ -58,14 +60,12 @@ class UserController {
         const token = generateAccessToken(userVerify?.name);
         const refresh_token = generateRefreshToken(userVerify?.name);
 
-        return res
-          .status(200)
-          .json({
-            token,
-            refresh_token,
-            email: userVerify.email,
-            _id: userVerify._id,
-          });
+        return res.status(200).json({
+          token,
+          refresh_token,
+          email: userVerify.email,
+          _id: userVerify._id,
+        });
       } else {
         return res.status(401).json({ message: "Credenciais inválidas" });
       }
