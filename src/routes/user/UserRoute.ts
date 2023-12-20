@@ -16,10 +16,28 @@ const Multer = multer({
 });
 
 userRoutes.post("/login", UserController.login).bind(UserController);
-userRoutes.post("/register", registerValidation, UserController.register).bind(UserController);
-userRoutes.put("/edit/:id", Multer.single("uploadImage"), uploadImage, isCPFValid, editValidation, UserController.editUser).bind(UserController);
+userRoutes
+  .post("/register", registerValidation, UserController.register)
+  .bind(UserController);
+userRoutes
+  .put(
+    "/edit/:id",
+    Multer.single("picture"),
+    uploadImage,
+    isCPFValid,
+    editValidation,
+    UserController.editUser
+  )
+  .bind(UserController);
 userRoutes.get("/get/:id", UserController.getUser).bind(UserController);
-userRoutes.delete("/delete/:id", UserController.deleteUser).bind(UserController);
-userRoutes.post("/address/:id", UserController.addAddress).bind(UserController);
+userRoutes
+  .post("/my-address/:id", UserController.addAddress)
+  .bind(UserController);
+  userRoutes
+  .post("/delete-account/:id", UserController.deleteUser)
+  .bind(UserController);
+userRoutes.post("/recovery-password", UserController.recoveryCode).bind(UserController);
+userRoutes.post("/verify-code", UserController.verifyRecoveryCode).bind(UserController);
+userRoutes.put("/change-password", UserController.changePassword).bind(UserController);
 
 export default userRoutes;

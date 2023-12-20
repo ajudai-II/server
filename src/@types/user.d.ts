@@ -7,9 +7,10 @@ export interface IUser extends Document {
   phone: string;
   cpf: string;
   password: string;
-  imageUrl: string;
+  picture: string;
   addresses: IAddress[];
   createdAt: Date;
+  recoveryCode?: string;
 }
 
 export interface IAddress {
