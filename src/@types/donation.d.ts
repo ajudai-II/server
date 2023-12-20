@@ -1,11 +1,11 @@
-import { IUser } from "./user";
+import { IAddress, IUser } from "./user";
 
 interface IDonator extends Document {
   name: string;
   email: string;
   phone: string;
-  adress: string;
   _id: string;
+  address: IAddress[];
 }
 
 interface IDonation extends Document {
@@ -13,7 +13,7 @@ interface IDonation extends Document {
   description: string;
   amount: number;
   category: string;
-  isValidated: boolean;
+  picture: string;
   donator: IDonator;
-  category: string;
+  isValidated: boolean;
 }

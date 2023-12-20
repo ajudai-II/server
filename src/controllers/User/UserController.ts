@@ -93,7 +93,7 @@ class UserController {
 
   public async editUser(req: Request, res: Response) {
     try {
-      const { name, email, phone, cpf } = req.body;
+      const { name, email, phone, cpf, password } = req.body;
       const { id } = req.params;
       const { picture }: any = req.file ? req.file : "";
       const searchUser = await User.findByIdAndUpdate(id, {
@@ -101,6 +101,7 @@ class UserController {
         email,
         phone,
         cpf,
+        password,
         picture,
       });
       searchUser?.save();
@@ -148,6 +149,7 @@ class UserController {
   public async addAddress(req: Request, res: Response) {
     try {
       const { id } = req.params;
+
       const { cep, uf, city, neighborhood, street, number, complement } =
         req.body;
 
@@ -166,13 +168,18 @@ class UserController {
           .json({ message: "Limite de endereços atingido" });
       }
 
-      if (user.addresses.length > 0) {
-        const addressExists = user.addresses.find(
-          (address) => address.cep === cep
-        );
-        if (addressExists) {
-          return res.status(400).json({ message: "Endereço já cadastrado" });
-        }
+      const isAddressDuplicate = user.addresses.some((address) => (
+        address.cep === cep &&
+        address.uf === uf &&
+        address.city === city &&
+        address.neighborhood === neighborhood &&
+        address.street === street &&
+        address.number === number &&
+        address.complement === complement
+      ));
+  
+      if (isAddressDuplicate) {
+        return res.status(400).json({ message: "Endereço já cadastrado" });
       }
 
       const newAddress: IAddress = {
@@ -184,6 +191,8 @@ class UserController {
         number,
         complement,
       };
+
+      console.log(newAddress);
 
       user.addresses.push(newAddress);
 
@@ -232,40 +241,47 @@ class UserController {
       const user = await User.findOne({ recoveryCode });
 
       if (!user) {
-        return res.status(400).json({ message: 'Código de recuperação inválido' });
+        return res
+          .status(400)
+          .json({ message: "Código de recuperação inválido" });
       }
 
       user.recoveryCode = undefined;
 
       await user.save();
 
-      // Gere um token JWT após verificar o código de recuperação com sucesso
       const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, {
-        expiresIn: '1h',
+        expiresIn: "1h",
       });
 
       console.log(user.id);
 
-      return res.status(200).json({ message: 'Código de recuperação válido', token, userId: user._id });
+      return res
+        .status(200)
+        .json({
+          message: "Código de recuperação válido",
+          token,
+          userId: user._id,
+        });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Erro interno do servidor' });
+      return res.status(500).json({ message: "Erro interno do servidor" });
     }
   }
 
   public async changePassword(req: Request, res: Response) {
     try {
       const { password, id } = req.body;
-  
+
       const hashedPassword = await bcrypt.hash(password, 10);
-  
+
       await User.findByIdAndUpdate(id, { password: hashedPassword });
       await User.findByIdAndUpdate(id, { $inc: { tokenVersion: 1 } });
-  
-      return res.status(200).json({ message: 'Senha alterada com sucesso' });
+
+      return res.status(200).json({ message: "Senha alterada com sucesso" });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Erro interno do servidor' });
+      return res.status(500).json({ message: "Erro interno do servidor" });
     }
   }
 }
