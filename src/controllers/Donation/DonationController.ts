@@ -10,12 +10,14 @@ class DonationController {
       const { title, description, amount, category, id } = req.body;
       const { picture }: any = req.file ? req.file : "";
       const user = await User.findById(id);
-      console.log(id);
       if (!user) {
         return res.status(404).send({ message: "User not found" });
       }
 
-      const lastAddress = user.addresses.length > 0 ? user.addresses[user.addresses.length - 1] : null;
+      const lastAddress =
+        user.addresses.length > 0
+          ? user.addresses[user.addresses.length - 1]
+          : null;
 
       const saveDonation = new Donation({
         title,
@@ -28,7 +30,7 @@ class DonationController {
           email: user.email,
           phone: user.phone,
           _id: user.id,
-          address: lastAddress
+          address: lastAddress,
         },
         isValidated: true,
       });
@@ -49,7 +51,8 @@ class DonationController {
       const { title, description, amount, isValidated, donator }: IDonation =
         req.body;
       const { id } = req.params;
-
+      const { picture }: any = req.file ? req.file : "";
+      console.log(picture);
       if (!id) {
         return res.status(400).send({ message: "Doação não encontrada" });
       }
@@ -61,6 +64,7 @@ class DonationController {
           description,
           amount,
           isValidated,
+          picture,
           donator,
           last_update: Date.now(),
         },
@@ -168,6 +172,23 @@ class DonationController {
         return res
           .status(400)
           .send({ message: "Doações não encontradas para esta categoria" });
+      }
+
+      return res.status(200).send({ data: find });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({ message: "Internal server error", error });
+    }
+  }
+
+  public async getLastDonations(req: Request, res: Response) {
+    try {
+      const find = await Donation.find()
+        .sort({ createdAt: -1 })
+        .limit(PAGE_SIZE);
+
+      if (!find) {
+        return res.status(400).send({ message: "Doação não encontrada" });
       }
 
       return res.status(200).send({ data: find });

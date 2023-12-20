@@ -25,6 +25,9 @@ donationRoutes
   .get("/donations", DonationController.getAllDonations)
   .bind(DonationController);
 donationRoutes
+  .get("/top-donations", DonationController.getLastDonations)
+  .bind(DonationController);
+donationRoutes
   .post(
     "/create-donation",
     Multer.single("picture"),
@@ -33,15 +36,21 @@ donationRoutes
   )
   .bind(DonationController);
 donationRoutes
-  .patch("/update-donation/:id", DonationController.updateDonation)
+  .patch(
+    "/update-donation/:id",
+    Multer.single("picture"),
+    uploadImage,
+    DonationController.updateDonation
+  )
   .bind(DonationController);
 donationRoutes
   .delete("/delete-donation/:id", DonationController.deleteDonation)
   .bind(DonationController);
-donationRoutes.get(
-  "/categories/:categoryName",
-  DonationController.getDonationsByCategory
-).bind(DonationController);
-donationRoutes.get("/", DonationController.getAllDonations).bind(DonationController);
+donationRoutes
+  .get("/categories/:categoryName", DonationController.getDonationsByCategory)
+  .bind(DonationController);
+donationRoutes
+  .get("/", DonationController.getAllDonations)
+  .bind(DonationController);
 
 export default donationRoutes;
